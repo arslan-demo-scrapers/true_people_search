@@ -134,5 +134,7 @@ The output file format is:
 * Confirm MySQL is running if database storage is enabled.
 * If you need assistance, feel free to reach out.
 
+Thank you
+
 Best regards,
 **Arslan**

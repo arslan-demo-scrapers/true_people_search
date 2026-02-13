@@ -101,7 +101,7 @@ SCRAPEOPS_API_KEY=your_api_key_here
 
    **OR**
 
-   Open `true_people_search.py` in PyCharm, right-click on it, and select the `Run` option.
+   Open `true_people_search_spider.py` in PyCharm, right-click on it, and select the `Run` option.
 
 **Note:**
 

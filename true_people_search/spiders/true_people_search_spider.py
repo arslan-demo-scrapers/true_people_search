@@ -12,13 +12,15 @@ from true_people_search.true_people_search.utils import clean, get_phone_cols, g
 
 class TruePeopleSearchSpider(Spider):
     name = 'true_people_search_spider'
-    person_file = 'PERSONS.csv'
+    logs_dir = '../logs/{}.log'
+    input_persons_file_path = 'PERSONS.csv'
     base_url = 'https://www.truepeoplesearch.com'
     person_url_t = "/results?name={name}&citystatezip={address}"
     search_url_t = '/find/{last name}/{first name}/area/{zip code}/'
     address_t = '{street address}_{city}_{state}_{zip code}'
 
     age_re = re.compile(r'Age (\d+)')
+    punctuation_re = re.compile(r'[^\w \-]')
 
     csv_headers = [
         "name", "full name", "aka", "sur names", "age", "owners", "emails",
@@ -70,7 +72,7 @@ class TruePeopleSearchSpider(Spider):
         yield Request("https://quotes.toscrape.com/", dont_filter=True)
 
     def parse(self, response, **kwargs):
-        return self.search_persons(self.person_file)
+        return self.search_persons(self.input_persons_file_path)
 
     def search_persons(self, file_path):
         for person in self.get_persons(file_path)[:1]:

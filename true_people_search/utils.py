@@ -1,11 +1,8 @@
-import base64
 import logging
-import os
 import re
 import time
 from csv import DictReader
 from html import unescape
-from random import choice
 
 import usaddress
 from nameparser import HumanName
@@ -81,30 +78,11 @@ def retry_invalid_response(callback):
     return wrapper
 
 
-def get_base64_encoded_str(text):
-    return str(base64.b64encode(text.encode("utf-8")))[2:-1]
-
-
-def del_file(path):
-    if os.path.exists(path):
-        os.remove(path)
-
-
 def get_csv_rows(file_name):
     persons = [dict(r) for r in DictReader(open(f'../input/{file_name}', encoding='utf-8')) if r]
     if not persons:
         log_info(f"{file_name} FILE EMPTY!")
     return persons
-
-
-def get_actual_url(response):
-    return response.url.split('url=')[-1].split('&')[0]
-
-
-def update_request_user_agent(request, user_agents):
-    request.headers.pop('referer', None)
-    request.headers['user-agent'] = choice(user_agents)
-    # request.headers['Proxy-Authorization'] = basic_auth_header('ashaka', 'yDJFhm60')
 
 
 def get_address_parts(address):
@@ -133,5 +111,3 @@ def get_address_parts(address):
     address_item['state'] = state.strip().upper()
     address_item['zip code'] = zip_code.strip()
     return address_item
-
-

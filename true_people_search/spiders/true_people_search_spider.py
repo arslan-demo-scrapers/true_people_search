@@ -14,7 +14,6 @@ from true_people_search.true_people_search.utils.text_utils import clean
 
 class TruePeopleSearchSpider(Spider):
     name = 'true_people_search_spider'
-    logs_dir = '../logs/{}.log'
     input_persons_file_path = 'PERSONS.csv'
     base_url = 'https://www.truepeoplesearch.com'
     address_t = '{street address}_{city}_{state}_{zip code}'

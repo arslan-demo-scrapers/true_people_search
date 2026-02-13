@@ -2,7 +2,7 @@ from urllib.parse import urlencode
 from true_people_search.true_people_search.config.env_config import Config
 
 
-def get_scrapeops_url(url):
+def build_proxy_url(url):
     payload = {
         'api_key': Config.SCRAPEOPS_API_KEY,
         'url': url,

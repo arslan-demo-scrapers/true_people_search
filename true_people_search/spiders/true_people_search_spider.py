@@ -5,9 +5,11 @@ from urllib.parse import urljoin
 from scrapy import Request, Spider
 from scrapy.crawler import CrawlerProcess
 
-from true_people_search.true_people_search.services.proxy_service import get_scrapeops_url
-from true_people_search.true_people_search.utils import clean, get_phone_cols, get_name_parts, \
-    get_csv_rows, log_info, retry_invalid_response, get_address_parts
+from true_people_search.true_people_search.services.proxy_service import build_proxy_url
+from true_people_search.true_people_search.utils.file_utils import get_phone_cols, get_csv_rows
+from true_people_search.true_people_search.utils.parsing_utils import get_name_parts, get_address_parts
+from true_people_search.true_people_search.utils.spider_utils import log_info, retry_invalid_response
+from true_people_search.true_people_search.utils.text_utils import clean
 
 
 class TruePeopleSearchSpider(Spider):
@@ -15,11 +17,10 @@ class TruePeopleSearchSpider(Spider):
     logs_dir = '../logs/{}.log'
     input_persons_file_path = 'PERSONS.csv'
     base_url = 'https://www.truepeoplesearch.com'
+    address_t = '{street address}_{city}_{state}_{zip code}'
     person_url_t = "/results?name={name}&citystatezip={address}"
     search_url_t = '/find/{last name}/{first name}/area/{zip code}/'
-    address_t = '{street address}_{city}_{state}_{zip code}'
 
-    age_re = re.compile(r'Age (\d+)')
     punctuation_re = re.compile(r'[^\w \-]')
 
     csv_headers = [
@@ -136,7 +137,7 @@ class TruePeopleSearchSpider(Spider):
         return [{**person, **address} for address in person.pop('addresses')]
 
     def get_proxy_url(self, url):
-        return get_scrapeops_url(url)
+        return build_proxy_url(url)
 
     def get_fullname(self, record_sel):
         return clean(record_sel.css('.content-header::text').get())
@@ -146,7 +147,6 @@ class TruePeopleSearchSpider(Spider):
         return {f'phone number {i + 1}': p for i, p in enumerate(phones)}
 
     def get_age(self, record_sel):
-        # return (self.age_re.findall(clean(record_sel.get())) or [''])[0]
         return clean(record_sel.css('span:contains("Age") + span::text').get())
 
     def get_also_know_as(self, record_sel):
